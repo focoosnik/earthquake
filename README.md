@@ -5,3 +5,4 @@ All results will save in table (<tablename> in in results_eq.db). Table have 3 c
   - ID (number of result)
   - place
   - mag (magnitude of earthquake)
+Results will print in terminal.

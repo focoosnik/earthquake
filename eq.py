@@ -1,5 +1,7 @@
 import requests
 import sqlite3
+from time import time
+from functools import wraps
 from tkinter import *
 
 main_form = Tk()
@@ -13,6 +15,17 @@ params_dict = {'format':'geojson',
                'maxradiuskm':'2000',
                'minmagnitude':'2'
 }
+
+def speed_test(function):
+    @wraps(function)
+    def wrap(*args, **kwargs):
+        s_time = time
+        result = function(*args, **kwargs)
+        e_time = time
+        return result
+    return wrap
+
+
 def request_eq(params):
     results_eq = []
     url = "https://earthquake.usgs.gov/fdsnws/event/1/query?"

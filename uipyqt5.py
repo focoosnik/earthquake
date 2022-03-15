@@ -9,28 +9,29 @@ class MainForm(QMainWindow):
         super().__init__()
         # Window
         self.setWindowTitle('Data about earthquake')
-        self.resize(300, 200)
+        self.setMinimumWidth(300)
+        self.setMinimumHeight(200)
         self.setWindowIcon(QIcon('icon.jpg'))
         # Start time
         self.lblStarttime = QLabel('Start time', self)
         self.lblStarttime.setFont(QFont('Cali', 10))
         self.lblStarttime.move(10, 0)
 
-        self.dStarttime = QDateTimeEdit(QDate().currentDate(), self)
+        self.dStarttime = QDateEdit(QDate().currentDate(), self)
         self.dStarttime.move(20, 25)
         self.dStarttime.setCalendarPopup(True)
 
-        #self.dStarttime.changeEvent()
+        self.dStarttime.dateChanged.connect(self.LimitStartTime)
         # End time
         self.lblEndtime = QLabel('End time', self)
         self.lblEndtime.setFont(QFont('Cali', 10))
         self.lblEndtime.move(10, 55)
 
-        self.dEndtime = QDateTimeEdit(QDate().currentDate(), self)
+        self.dEndtime = QDateEdit(QDate().currentDate(), self)
         self.dEndtime.move(20, 80)
         self.dEndtime.setCalendarPopup(True)
 
-        # self.dEndtime.changeEvent()
+        self.dEndtime.dateChanged.connect(self.LimitEndTime)
         # Checkbox 'show results'
         self.cbShowres =QCheckBox('Snow results in window', self)
         self.cbShowres.toggle()
@@ -59,6 +60,19 @@ class MainForm(QMainWindow):
     def MinMag(self, value):
         self.lblMinMag.setText(f'Min magnitude {str(value/10)}')
 
+
+    def LimitEndTime(self, date):
+        limit = QDate().currentDate()
+        if date > limit:
+            self.dEndtime.setDate(limit)
+        elif date<self.dStarttime.date():
+            self.dStarttime.setDate(date)
+
+
+    def LimitStartTime(self, data):
+        limit = self.dEndtime.date()
+        if data > limit:
+            self.dStarttime.setDate(limit)
 
 if __name__ == '__main__':
     app_main = QApplication(sys.argv)

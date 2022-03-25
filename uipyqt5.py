@@ -40,40 +40,54 @@ class MainForm(QMainWindow):
         self.cbShowres.toggle()
         self.cbShowres.move(140, 120)
         self.cbShowres.setMinimumWidth(150)
-        # Line edit lattitude
-        self.lblLat = QLabel('Lattitude', self)
+        # Line edit latitude
+        self.lblLat = QLabel('Latitude', self)
         self.lblLat.setFont(QFont('Cali', 10))
         self.lblLat.setMinimumWidth(120)
         self.lblLat.move(140, 0)
 
-        self.leLat = QLineEdit('64', self)
-        self.leLat.move(140, 25)
+        self.latValidator = QDoubleValidator(self)
+        self.latValidator.setRange(-90, 90)
+        self.latValidator.setNotation(QDoubleValidator.StandardNotation)
+        self.latValidator.setDecimals(6)
 
-        self.leLat.textChanged.connect(self.LimitLat)
+        self.leLat = QLineEdit('43,34', self)
+        self.leLat.move(140, 25)
+        self.leLat.setValidator(self.latValidator)
+
+        #self.leLat.textChanged.connect(self.LimitLat)
         # Line edit longitude
         self.lblLong = QLabel('Longitude', self)
         self.lblLong.setFont(QFont('Cali', 10))
         self.lblLong.setMinimumWidth(120)
         self.lblLong.move(140, 60)
 
-        self.leLat = QLineEdit('64', self)
-        self.leLat.move(140, 85)
+        self.longValidator = QDoubleValidator(self)
+        self.longValidator.setRange(-180, 180)
+        self.longValidator.setNotation(QDoubleValidator.StandardNotation)
+        self.longValidator.setDecimals(6)
+
+        self.leLong = QLineEdit('42,43', self)
+        self.leLong.move(140, 85)
+        self.leLong.setValidator(self.longValidator)
+        #self.leLong.textChanged.connect(self.LimitLong)
         # Line edit Maxradiuskm
         self.lblMaxrad = QLabel('Max. radius km', self)
         self.lblMaxrad.setFont(QFont('Cali', 10))
         self.lblMaxrad.setMinimumWidth(120)
         self.lblMaxrad.move(10, 120)
 
-        self.leMaxrad = QLineEdit('60', self)
-        self.leMaxrad.move(10, 145)
+        self.radValidator = QIntValidator(self)
+        self.radValidator.setRange(0, 20000)
 
-        #self.cbShowres.stateChanged.connect()
+        self.leMaxrad = QLineEdit('6000', self)
+        self.leMaxrad.move(10, 145)
+        self.leMaxrad.setValidator(self.radValidator)
+        #self.leMaxrad.textChanged.connect(self.LimitMaxrad)
         # Get data button
         self.btnGet = QPushButton('Get data', self)
         self.btnGet.move(140, 145)
         self.btnGet.setStyleSheet("background-color: #99ff99")
-
-        #self.getBtn.clicked.connect(self.setColor)
         # Min magnitude
         self.lblMinMag = QLabel('Mag. > 0', self)
         self.lblMinMag.setFont(QFont('Cali', 10))
@@ -107,9 +121,19 @@ class MainForm(QMainWindow):
             self.dStarttime.setDate(limit)
 
     def LimitLat(self, value):
-        if str(value).isdigit():
-            self.statusBar().showMessage('true')
-        else: self.statusBar().showMessage('false')
+        fvalue = float(value)
+        if fvalue > 90:
+            pass
+
+    def LimitLong(self, value):
+        fvalue = float(value)
+        if fvalue > 90:
+            pass
+
+    def LimitMaxrad(self, value):
+        fvalue = float(value)
+        if fvalue > 90:
+            pass
 
 
 if __name__ == '__main__':

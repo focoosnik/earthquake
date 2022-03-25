@@ -1,8 +1,13 @@
 import requests
 import sqlite3
+import sys
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
 from time import time
 from functools import wraps
 from tkinter import *
+import uipyqt5
 
 main_form = Tk()
 main_form.geometry('500x500')
@@ -31,11 +36,10 @@ def request_eq(params):
     url = "https://earthquake.usgs.gov/fdsnws/event/1/query?"
     response = requests.get(url, headers={'Accept': 'application/json'}, params=params)
     data = response.json()
-    print("Found EQ " + str(len(data['features'])))
+    mainform.statusBar().showMessage("Found EQ " + str(len(data['features'])))
     for i in range(0,len(data['features'])):
         place = data['features'][i]['properties']['place']
         mag = data['features'][i]['properties']['mag']
-        # print(f'{i}. Place {place} with {mag}')
         results_eq.append((i, place, mag))
     return results_eq
 
@@ -67,21 +71,37 @@ def print_eq_from_db(table_name):
     print(cursor.fetchall())
     conn.commit()
     conn.close()
+    main_form.mainloop()
+
+def btn_clicked():
+    params_dict['starttime'] = f'{mainform.dStarttime.date().year()}-' \
+                               f'{mainform.dStarttime.date().month()}-'\
+                               f'{mainform.dStarttime.date().day()}'
+    params_dict['endtime'] = f'{mainform.dEndtime.date().year()}-' \
+                               f'{mainform.dEndtime.date().month()}-'\
+                               f'{mainform.dEndtime.date().day()}'
+    mainform.statusBar().showMessage(params_dict['starttime'])
+    params_dict['latitude'] = mainform.leLat.text().replace(',', '.')
+    params_dict['longitude'] = mainform.leLong.text().replace(',', '.')
+    params_dict['maxradiuskm'] = mainform.leMaxrad.text()
+    params_dict['minmagnitude'] = str(mainform.cldMinMag.value()/10)
+    save_eq('eq', request_eq(params_dict))
+    if mainform.cbShowres.isChecked():
+        print_eq_from_db('eq')
 
 
+if __name__ == '__main__':
+    app_main = QApplication(sys.argv)
+    mainform = uipyqt5.MainForm()
+    mainform.show()
+    mainform.btnGet.clicked.connect(btn_clicked)
+    sys.exit(app_main.exec_())
 close_app = None
 while close_app !='0':
-    # params_dict['starttime'] = str(input("Enter the start time yyyy-mm-dd(example: 2019-01-01)= "))
-    # params_dict['endtime'] = str(input("Enter the start time yyyy-mm-dd(example: 2019-05-01)= "))
-    # params_dict['latitude'] = str(input("Enter the latitude (example: 51.51)= "))
-    # params_dict['longitude'] = str(input("Enter the longitude (example: -0.12)= "))
-    # params_dict['maxradiuskm'] = str(input("Enter the max radius in km (example: 2000)= "))
-    # params_dict['minmagnitude'] = str(input("Enter the min magnitude (example: 2)= "))
     filename = input ('Enter tablename for results: ')
-    save_eq(filename, request_eq(params_dict))
+    save_eq('eq', request_eq(params_dict))
     print_eq_from_db(filename)
     main_form.mainloop()
-    close_app = str(input('Enter "0" for close APP or any key for continue  '))
 
 
 

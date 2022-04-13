@@ -9,9 +9,7 @@ from functools import wraps
 from tkinter import *
 import uipyqt5
 
-main_form = Tk()
-main_form.geometry('500x500')
-main_form.title('Found EQs')
+
 params_dict = {'format':'geojson',
                'starttime':'2019-01-01',
                'endtime':'2019-05-01',
@@ -63,15 +61,25 @@ def print_eq_from_db(table_name):
     conn = sqlite3.connect("results_eq.db")
     cursor = conn.cursor()
     select_query = f"SELECT * FROM {table_name};"
-    result_box = Listbox(main_form)
-    result_box.pack(fill=X)
+    #result_form.
+    #result_box.delete(0,result_box.size())
+
+    result_form = Tk()
+    result_form.geometry('500x500')
+    result_form.title(mainform.statusBar().currentMessage ())
+    scrollbar = Scrollbar(result_form)
+    scrollbar.pack(side=RIGHT, fill=Y)
+    result_box = Listbox(result_form, yscrollcommand=scrollbar.set, height=30)
+
+    result_box.pack(fill=BOTH, expand=1, padx=5, pady=5)
+    scrollbar.config(command=result_box.yview)
+
     cursor.execute(select_query)
     for i in cursor.fetchall():
         result_box.insert(END, i)
-    print(cursor.fetchall())
     conn.commit()
     conn.close()
-    main_form.mainloop()
+    result_form.mainloop()
 
 def btn_clicked():
     params_dict['starttime'] = f'{mainform.dStarttime.date().year()}-' \
@@ -97,11 +105,7 @@ if __name__ == '__main__':
     mainform.btnGet.clicked.connect(btn_clicked)
     sys.exit(app_main.exec_())
 close_app = None
-while close_app !='0':
-    filename = input ('Enter tablename for results: ')
-    save_eq('eq', request_eq(params_dict))
-    print_eq_from_db(filename)
-    main_form.mainloop()
+
 
 
 

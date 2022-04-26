@@ -6,4 +6,4 @@ All results will save in table ('eq' in in results_eq.db). Table have 3 columns:
   - place
   - mag (magnitude of earthquake).
 
-Results will show in window.
+You can see the results in window.

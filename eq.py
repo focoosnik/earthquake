@@ -22,19 +22,22 @@ params_dict = {'format':'geojson',
 def speed_test(function):
     @wraps(function)
     def wrap(*args, **kwargs):
-        s_time = time
+        s_time = time()
         result = function(*args, **kwargs)
-        e_time = time
+        e_time = time()
+        total = '%.5f' % (e_time-s_time)
+        mainform.statusBar().showMessage(f'{mainform.statusBar().currentMessage()} Request execution time - {total} s')
         return result
     return wrap
 
 
+@speed_test
 def request_eq(params):
     results_eq = []
     url = "https://earthquake.usgs.gov/fdsnws/event/1/query?"
     response = requests.get(url, headers={'Accept': 'application/json'}, params=params)
     data = response.json()
-    mainform.statusBar().showMessage("Found EQ " + str(len(data['features'])))
+    mainform.statusBar().showMessage("Found EQ " + str(len(data['features']))+'| ')
     for i in range(0,len(data['features'])):
         place = data['features'][i]['properties']['place']
         mag = data['features'][i]['properties']['mag']
@@ -61,8 +64,6 @@ def print_eq_from_db(table_name):
     conn = sqlite3.connect("results_eq.db")
     cursor = conn.cursor()
     select_query = f"SELECT * FROM {table_name};"
-    #result_form.
-    #result_box.delete(0,result_box.size())
 
     result_form = Tk()
     result_form.geometry('500x500')

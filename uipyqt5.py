@@ -15,6 +15,7 @@ class MainForm(QMainWindow):
         self.setMaximumHeight(200)
         self.setWindowIcon(QIcon('icon.jpg'))
         self.statusBar().showMessage('Ready')
+
         # Start time
         self.lblStarttime = QLabel('Start time', self)
         self.lblStarttime.setFont(QFont('Cali', 10))
@@ -23,8 +24,8 @@ class MainForm(QMainWindow):
         self.dStarttime = QDateEdit(QDate().currentDate(), self)
         self.dStarttime.move(10, 25)
         self.dStarttime.setCalendarPopup(True)
-
         self.dStarttime.dateChanged.connect(self.LimitStartTime)
+
         # End time
         self.lblEndtime = QLabel('End time', self)
         self.lblEndtime.setFont(QFont('Cali', 10))
@@ -35,42 +36,39 @@ class MainForm(QMainWindow):
         self.dEndtime.setCalendarPopup(True)
 
         self.dEndtime.dateChanged.connect(self.LimitEndTime)
+
         # Checkbox 'show results'
         self.cbShowres = QCheckBox('Snow results in window', self)
         self.cbShowres.toggle()
         self.cbShowres.move(140, 120)
         self.cbShowres.setMinimumWidth(150)
-        # Line edit latitude
+
+        # Spin box latitude
         self.lblLat = QLabel('Latitude', self)
         self.lblLat.setFont(QFont('Cali', 10))
         self.lblLat.setMinimumWidth(120)
         self.lblLat.move(140, 0)
 
-        self.latValidator = QDoubleValidator(self)
-        self.latValidator.setRange(-90, 90)
-        self.latValidator.setNotation(QDoubleValidator.StandardNotation)
-        self.latValidator.setDecimals(6)
+        self.dsbLat = QDoubleSpinBox(self)
+        self.dsbLat.setValue(43.34)
+        self.dsbLat.move(140, 25)
+        self.dsbLat.setRange(-90, 90)
+        self.dsbLat.setDecimals(6)
+        self.dsbLat.setButtonSymbols(2)
 
-        self.leLat = QLineEdit('43,34', self)
-        self.leLat.move(140, 25)
-        self.leLat.setValidator(self.latValidator)
-
-        #self.leLat.textChanged.connect(self.LimitLat)
         # Line edit longitude
         self.lblLong = QLabel('Longitude', self)
         self.lblLong.setFont(QFont('Cali', 10))
         self.lblLong.setMinimumWidth(120)
         self.lblLong.move(140, 60)
 
-        self.longValidator = QDoubleValidator(self)
-        self.longValidator.setRange(-180, 180)
-        self.longValidator.setNotation(QDoubleValidator.StandardNotation)
-        self.longValidator.setDecimals(6)
+        self.dsbLong = QDoubleSpinBox(self)
+        self.dsbLong.setValue(42.43)
+        self.dsbLong.move(140, 85)
+        self.dsbLong.setRange(-180, 180)
+        self.dsbLong.setDecimals(6)
+        self.dsbLong.setButtonSymbols(2)
 
-        self.leLong = QLineEdit('42,43', self)
-        self.leLong.move(140, 85)
-        self.leLong.setValidator(self.longValidator)
-        #self.leLong.textChanged.connect(self.LimitLong)
         # Line edit Maxradiuskm
         self.lblMaxrad = QLabel('Max. radius km', self)
         self.lblMaxrad.setFont(QFont('Cali', 10))
@@ -83,7 +81,7 @@ class MainForm(QMainWindow):
         self.leMaxrad = QLineEdit('6000', self)
         self.leMaxrad.move(10, 145)
         self.leMaxrad.setValidator(self.radValidator)
-        #self.leMaxrad.textChanged.connect(self.LimitMaxrad)
+
         # Get data button
         self.btnGet = QPushButton('Get data', self)
         self.btnGet.move(140, 145)

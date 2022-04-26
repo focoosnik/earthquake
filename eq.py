@@ -89,8 +89,8 @@ def btn_clicked():
                                f'{mainform.dEndtime.date().month()}-'\
                                f'{mainform.dEndtime.date().day()}'
     mainform.statusBar().showMessage(params_dict['starttime'])
-    params_dict['latitude'] = mainform.leLat.text().replace(',', '.')
-    params_dict['longitude'] = mainform.leLong.text().replace(',', '.')
+    params_dict['latitude'] = mainform.dsbLat.text().replace(',', '.')
+    params_dict['longitude'] = mainform.dsbLong.text().replace(',', '.')
     params_dict['maxradiuskm'] = mainform.leMaxrad.text()
     params_dict['minmagnitude'] = str(mainform.cldMinMag.value()/10)
     save_eq('eq', request_eq(params_dict))
